@@ -155,7 +155,7 @@ class SeleniumDriver():
                                                      ElementNotVisibleException,
                                                      ElementNotSelectableException])
             element = wait.until(EC.visibility_of_element_located((byType,
-                                                             "stopFilter_stops-0")))
+                                                             locator)))
             self.log.info("Element appeared on the web page")
         except:
             self.log.info("Element not appeared on the web page")
