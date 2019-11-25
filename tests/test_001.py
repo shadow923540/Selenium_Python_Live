@@ -1,8 +1,8 @@
-from pages.page1 import LoginPage
+from pages.LoginPage import LoginPage
+from pages.NavBar import NavBar
 from utilities.teststatus import TestStatus
 import unittest
 import pytest
-import time
 import allure
 
 @pytest.mark.usefixtures("oneTimeSetUp")
@@ -12,12 +12,19 @@ class LoginTests(unittest.TestCase):
     def classSetup(self):
         self.ts = TestStatus(self.driver)
         self.Lp = LoginPage(self.driver)
+        self.Nb = NavBar(self.driver)
 
+    @pytest.fixture()
+    def navigateToArchive(self):
+        pass
+
+
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.description("Test check if user is log in after type correct credentials")
     def test_validLogin(self):
         self.Lp.login()
         result1 = self.Lp.getWelcomeMessage("Welcome to your home page, AgentTestowy!")
         self.ts.markFinal("test_validLogin", result1, "Login was not succesful")
-        time.sleep(5)
 
     def test_empty(self):
         pass
