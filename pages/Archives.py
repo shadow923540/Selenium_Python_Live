@@ -3,6 +3,7 @@ import logging
 
 from base.basepage import BasePage
 import allure
+import time
 
 class ArchivesPage(BasePage):
     log = cl.customLogger(logging.DEBUG)
@@ -14,9 +15,11 @@ class ArchivesPage(BasePage):
 
     ################### LOCATORS #####################
 
+    _archives_icon= "a[href='/archives']"
+    _home_icon= "a[href='/home']"
     _archives_welcome_message = ".css-pbayr1"
     _search_in_archives = "input.css-1qq8djj css-673enp4"
-    _add_filter = "//span[contains(text(), 'Add filter')]"
+    _add_filter = ".css-rnahou0 > span"
 
     #Filter options
     _date_field = ".css-1jy8uex > li:nth-child(1) > div > button"
@@ -62,7 +65,41 @@ class ArchivesPage(BasePage):
 
     ################### LOCATORS #####################
 
-
     def checkIfUserOnArchivesPage(self):
         self.waitForElementAndCheckText(self._archives_welcome_message, 'css', 'Archives')
 
+    def clickAddFilter(self):
+        self.elementClick(self._add_filter)
+    def clickDateField(self):
+        self.elementClick(self._date_field)
+    def clickTodayField(self):
+        self.elementClick(self._date_field_today)
+    def clickAgentField(self):
+        self.elementClick(self._agent_field)
+    def clickFirstAgent(self):
+        self.elementClick(self._agent_field_1)
+    def clickRateField(self):
+        self.elementClick(self._rating_field)
+    def clickRatedBad(self):
+        self.elementClick(self._rating_field_rated_bad)
+    def getNumbersOfChats(self):
+        numbers_of_chats = len(self.getElementList(self._numbers_of_chats))
+        return numbers_of_chats
+
+    def checkTodayFilter(self):
+        self.clickAddFilter()
+        self.clickDateField()
+        self.clickTodayField()
+        self.clickRateField()
+        self.clickRatedBad()
+        time.sleep(2)
+        self.removeAllFilters()
+        time.sleep(2)
+
+    def removeAllFilters(self):
+        self.elementClick(self._home_icon)
+        self.elementClick(self._archives_icon)
+        self.clickAddFilter()
+        self.clickEveryWebElementOnList(self._remove_filter,locatorType='css')
+        self.elementClick(self._home_icon)
+        self.elementClick(self._archives_icon)
