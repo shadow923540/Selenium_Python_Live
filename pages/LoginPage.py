@@ -39,9 +39,7 @@ class LoginPage(BasePage):
         self.clickLoginButton()
 
     @allure.step("Wait for welcomeMessage after login and save message to variable")
-    def getWelcomeMessage(self, welcomeMessageToVerify):
-        self.waitForElement(self._welcome_message, locatorType='xpath')
-        welcomeMessage = self.getText(self._welcome_message, locatorType='xpath')
-        result = self.util.verifyTextMatch(welcomeMessage, welcomeMessageToVerify)
-        return result
+    def checkIfUserLogIn(self):
+        self.waitForElementAndCheckText(self._welcome_message, 'xpath', 'Welcome to your home page, AgentTestowy!')
+
 
