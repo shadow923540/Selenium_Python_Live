@@ -7,12 +7,14 @@ import utilities.custom_logger as cl
 import logging
 import time
 import os
+from utilities.util import Util
 
 class SeleniumDriver():
     log = cl.customLogger(logging.DEBUG)
 
     def __init__(self, driver):
         self.driver = driver
+        self.util = Util()
 
     def getTitle(self):
         return self.driver.title
@@ -178,3 +180,9 @@ class SeleniumDriver():
             self.log.error("### Exception Occurred when taking screenshot")
             print_stack()
 
+
+    def waitForElementAndCheckText(self, locator, locatorType, messageToVerify):
+        self.waitForElement(locator, locatorType= locatorType)
+        message = self.getText(locator, locatorType= locatorType)
+        result = self.util.verifyTextMatch(message, messageToVerify)
+        assert result == True
