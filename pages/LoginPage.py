@@ -37,6 +37,7 @@ class LoginPage(BasePage):
         self.enterEmail(email)
         self.enterPassword(password)
         self.clickLoginButton()
+        self.checkIfUserLogIn()
 
     @allure.step("Wait for welcomeMessage after login and save message to variable")
     def checkIfUserLogIn(self):
