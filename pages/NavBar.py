@@ -19,5 +19,5 @@ class NavBar(BasePage):
 
     @allure.step('Click archive icon')
     def clickAchivesIcon(self):
-        self.elementClick(self._archives_icon, locatorType='css')
+        self.elementClick(self._archives_icon)
 
