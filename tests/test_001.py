@@ -7,7 +7,7 @@ import pytest
 import allure
 import time
 
-@pytest.mark.usefixtures("oneTimeSetUp")
+@pytest.mark.usefixtures("oneTimeSetUp", "setUp")
 class LoginTests(unittest.TestCase):
 
     @pytest.fixture(autouse=True)
@@ -22,15 +22,15 @@ class LoginTests(unittest.TestCase):
         self.Nb.clickAchivesIcon()
         self.Archives.checkIfUserOnArchivesPage()
 
-
-
     @pytest.mark.run(order=1)
     @allure.severity(allure.severity_level.NORMAL)
     @allure.description("Test check if user is log in after type correct credentials")
     def test_validLogin(self):
         self.Lp.login()
-        self.Lp.checkIfUserLogIn()
 
+    @pytest.mark.run(order=3)
+    def test_checkTodayFiltr(self):
+        self.Archives.checkTodayFilter()
 
 
 
