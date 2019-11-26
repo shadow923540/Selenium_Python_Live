@@ -1,5 +1,7 @@
 import pytest
 from base.webdriverfactory import WebDriverFactory
+from pages.LoginPage import LoginPage
+from pages.NavBar import NavBar
 
 
 @pytest.yield_fixture(scope="class")
@@ -7,6 +9,10 @@ def oneTimeSetUp(request, browser):
     print("Running one time setUp")
     wdf = WebDriverFactory(browser)
     driver = wdf.getWebDriverInstance()
+    Lp = LoginPage(driver)
+    Nb = NavBar(driver)
+    Lp.login()
+    Nb.goToArchive()
     if request.cls is not None:
         request.cls.driver = driver
     yield driver
