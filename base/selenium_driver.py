@@ -93,7 +93,7 @@ class SeleniumDriver():
         element.clear()
 
 
-    def elementClick(self, locator="", locatorType="id", element=None):
+    def elementClick(self, locator="", locatorType="css", element=None):
         try:
             if locator:
                 element = self.getElement(locator, locatorType)
@@ -186,3 +186,22 @@ class SeleniumDriver():
         message = self.getText(locator, locatorType= locatorType)
         result = self.util.verifyTextMatch(message, messageToVerify)
         assert result == True
+
+    def getElementList(self, locator, locatorType="css"):
+        element = None
+        try:
+            locatorType = locatorType.lower()
+            byType = self.getByType(locatorType)
+            element = self.driver.find_elements(byType, locator)
+            self.log.info("Element list found with locator: " + locator +
+                          " and  locatorType: " + locatorType)
+        except:
+            self.log.info("Element list not found with locator: " + locator +
+                          " and  locatorType: " + locatorType)
+        return element
+
+    def clickEveryWebElementOnList(self, locator, locatorType):
+        elementList = self.getElementList(locator, locatorType)
+        print(elementList)
+        for element in elementList:
+            element.click()
