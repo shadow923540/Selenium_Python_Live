@@ -2,11 +2,11 @@ import pytest
 from base.webdriverfactory import WebDriverFactory
 from pages.LoginPage import LoginPage
 from pages.NavBar import NavBar
+from pages.Archives import ArchivesPage
 
 
 @pytest.yield_fixture(scope="class")
 def oneTimeSetUp(request, browser):
-    print("Running one time setUp")
     wdf = WebDriverFactory(browser)
     driver = wdf.getWebDriverInstance()
     Lp = LoginPage(driver)
@@ -17,12 +17,12 @@ def oneTimeSetUp(request, browser):
         request.cls.driver = driver
     yield driver
     driver.quit()
-    print("Running one time tearDown")
 
 @pytest.yield_fixture(scope="function")
 def setUp():
     print("Running test set up")
     yield
+    ArchivesPage.removeAllFilters()
     print("running test teardown")
 
 def pytest_addoption(parser):

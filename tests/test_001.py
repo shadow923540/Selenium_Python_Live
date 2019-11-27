@@ -23,8 +23,12 @@ class LoginTests(unittest.TestCase):
 
     @pytest.mark.run(order=1)
     def test_checkSpamFilter(self):
-        result = self.Archives.checkIfSpamFilterWorkCorrectly()
-        print(result)
+        result = self.Archives.checkSpamFilter()
+        self.ts.mark(result, "Pass")
+
+    @pytest.mark.run(order=2)
+    def test_checkSalesFilter(self):
+        result = self.Archives.checkSalesFilter()
         self.ts.markFinal('CheckSpamFilter', result, "CheckSpamFilter Failed")
 
 
