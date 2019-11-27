@@ -16,6 +16,9 @@ class TestStatus(SeleniumDriver):
                 if any("PASS" in lis for lis in result):
                     self.resultList.append("PASS")
                     self.log.info("### VERIFICATION SUCCESSFUL :: + " + resultMessage)
+                elif result == 'PASS':
+                    self.resultList.append("PASS")
+                    self.log.info("### VERIFICATION SUCCESSFUL :: + " + resultMessage)
                 else:
                     self.resultList.append("FAIL")
                     self.log.info("### VERIFICATION FAILED :: + " + resultMessage)
@@ -34,7 +37,7 @@ class TestStatus(SeleniumDriver):
 
     def markFinal(self, testName, result, resultMessage):
         self.setResult(result, resultMessage)
-
+        print(self.resultList)
         if "FAIL" in self.resultList:
             self.log.error(testName + " ### TEST FAILED")
             self.resultList.clear()
