@@ -50,8 +50,24 @@ class SeleniumDriver():
                           " locatorType: " +locatorType )
         return element
 
-    def getText(self, locator="", locatorType="id", element=None, info=""):
+    def getTextFromElement(self, element):
+        try:
+            self.log.debug("Before finding text")
+            text = element.text
+            self.log.debug("After finding element, size is: " + str(len(text)))
+            if len(text) == 0:
+                text = element.get_attribute("innerText")
+            if len(text) != 0:
+                self.log.info("Getting text on element :: " )
+                self.log.info("The text is :: '" + text + "'")
+                text = text.strip()
+        except:
+            self.log.error("Failed to get text on element ")
+            print_stack()
+            text = None
+        return text
 
+    def getText(self, locator="", locatorType="id", element=None, info=""):
         try:
             if locator:
                 self.log.debug("In locator condition")
@@ -85,7 +101,7 @@ class SeleniumDriver():
                               " locatorType: " + locatorType)
             return isDisplayed
         except:
-            print("Element not found")
+            self.log("Element not found")
             return False
 
     def elementClear(self, locator, locatorType="id"):
@@ -150,7 +166,7 @@ class SeleniumDriver():
         element = None
         try:
             byType = self.getByType(locatorType)
-            print("Waiting for maximum :: " + str(timeout) +
+            self.log("Waiting for maximum :: " + str(timeout) +
                   " :: seconds for element to be clickable")
             wait = WebDriverWait(self.driver, 10, poll_frequency=1,
                                  ignored_exceptions=[NoSuchElementException,
@@ -168,7 +184,7 @@ class SeleniumDriver():
         element = None
         try:
             byType = self.getByType(locatorType)
-            print("Waiting for maximum :: " + str(timeout) +
+            self.log("Waiting for maximum :: " + str(timeout) +
                   " :: seconds for element to be clickable")
             wait = WebDriverWait(self.driver, 10, poll_frequency=1,
                                  ignored_exceptions=[NoSuchElementException,
@@ -200,7 +216,7 @@ class SeleniumDriver():
 
 
     def waitForElementAndCheckText(self, locator, locatorType, messageToVerify):
-        self.waitUntilElementIsClickable(locator, locatorType= locatorType)
+        self.waitUntilElementIsClickable(locator, locatorType=locatorType)
         message = self.getText(locator, locatorType= locatorType)
         result = self.util.verifyTextMatch(message, messageToVerify)
         if result:
@@ -223,6 +239,5 @@ class SeleniumDriver():
 
     def clickEveryWebElementOnList(self, locator, locatorType):
         elementList = self.getElementList(locator, locatorType)
-        print(elementList)
         for element in elementList:
             element.click()
