@@ -16,6 +16,7 @@ class ArchivesPage(BasePage):
     ################### LOCATORS #####################
 
     _archives_icon= "a[href='/archives']"
+    _archives_text = "css-pbayr1"
     _home_icon= "a[href='/home']"
     _archives_welcome_message = ".css-pbayr1"
     _search_in_archives = "input.css-1qq8djj css-673enp4"
@@ -28,6 +29,8 @@ class ArchivesPage(BasePage):
     _tag_field = ".css-1jy8uex > li:nth-child(6) > div > button"
 
     _show_chats = ".css-aezl7o > button"
+    _name_of_tag = '.css-hyz9fq'
+    _locators_of_tag = 'css-18zr55l'
 
     #Date field options
     _date_field_today = ".css-y9xtj8> li:nth-child(1)"
@@ -100,6 +103,7 @@ class ArchivesPage(BasePage):
         result = [result_1, result_2]
         return result
     def checkTextInTagdButtonText(self, buttonText):
+        time.sleep(1)
         result= self.waitForElementAndCheckText(self._show_chats, 'css', buttonText)
         return result
     def clearAllFilterAndCheckChatsMessage(self):
@@ -134,13 +138,42 @@ class ArchivesPage(BasePage):
         result = [result_1, result_2, result_3, result_4, result_5, result_6, result_7]
         return result
 
-    def checkIfSpamFilterWorkCorrectly(self):
+    def checkIfSelectedTagIsVisibleInConversation(self, selectedTag):
+        time.sleep(1)
+        result = []
+        chats = self.getElementList(self._numbers_of_chats)
+        for chat in chats:
+            tag_text = []
+            self.elementClick(element=chat)
+            tags = self.getElementList(self._name_of_tag)
+            for tag in tags:
+                tagName = self.getText(element=tag)
+                tag_text.append(tagName)
+            if selectedTag in tag_text:
+                result.append("PASS")
+            else:
+                result.append("FAIL")
+        return result
+
+
+    def checkIfFilterWorkCorrectlyinAllConversation(self, locator, tagname):
         self.clickAddFilter()
-        self.clickTagFieldAndChoseFilter(self._tag_field_spam)
-        result_1 = self.checkTextInTagdButtonText('Show 2 chats')
+        self.clickTagFieldAndChoseFilter(locator)
         self.waitUntilElementIsClickable(self._show_chats, 'css')
+        time.sleep(2)
         self.elementClick(self._show_chats)
-        return result_1
+        self.waitUntilElementIsVisible(self._archives_text)
+        result = self.checkIfSelectedTagIsVisibleInConversation(tagname)
+        print(result)
+        return result
+
+    def checkSpamFilter(self):
+        result = self.checkIfFilterWorkCorrectlyinAllConversation(self._tag_field_spam, 'spam')
+        return result
+
+    def checkSalesFilter(self):
+        result = self.checkIfFilterWorkCorrectlyinAllConversation(self._tag_field_sales, 'sales')
+        return result
 
 
     def removeAllFilters(self):
