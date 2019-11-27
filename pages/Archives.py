@@ -36,6 +36,7 @@ class ArchivesPage(BasePage):
     _date_field_last30days = ".css-y9xtj8> li:nth-child(4)"
     _date_field_last_month = ".css-y9xtj8> li:nth-child(5)"
     _date_field_current_month = ".css-y9xtj8> li:nth-child(6)"
+    _date_field_check_filter = ".css-v45ci8 > div > span"
 
     #Agent field options
     _agent_field_1 = ".css-14igyak > li:nth-child(1)"
@@ -62,6 +63,7 @@ class ArchivesPage(BasePage):
 
     _numbers_of_chats = ".css-1a35ai7 > li"
     _remove_filter = ".remove"
+    _clear_all='button.css-vc72rn'
 
     ################### LOCATORS #####################
 
@@ -72,10 +74,10 @@ class ArchivesPage(BasePage):
         self.elementClick(self._add_filter)
     def clickDateField(self):
         self.elementClick(self._date_field)
-    def clickTodayField(self):
-        self.elementClick(self._date_field_today)
     def clickAgentField(self):
         self.elementClick(self._agent_field)
+    def clickTagField(self):
+        self.elementClick(self._tag_field)
     def clickFirstAgent(self):
         self.elementClick(self._agent_field_1)
     def clickRateField(self):
@@ -83,18 +85,63 @@ class ArchivesPage(BasePage):
     def clickRatedBad(self):
         self.elementClick(self._rating_field_rated_bad)
     def getNumbersOfChats(self):
+        self.waitUntilElementIsVisible(self._numbers_of_chats, 'css')
         numbers_of_chats = len(self.getElementList(self._numbers_of_chats))
         return numbers_of_chats
-
-    def checkTodayFilter(self):
-        self.clickAddFilter()
+    def clickDateFieldAndChoseFilter(self, locator, locatorType = 'css'):
         self.clickDateField()
-        self.clickTodayField()
-        self.clickRateField()
-        self.clickRatedBad()
-        time.sleep(2)
-        self.removeAllFilters()
-        time.sleep(2)
+        self.elementClick(locator, locatorType)
+    def clickTagFieldAndChoseFilter(self, locator, locatorType = 'css'):
+        self.clickTagField()
+        self.elementClick(locator, locatorType)
+    def checkTextInDateFieldAndButtonText(self, dateText, buttonText):
+        result_1 = self.waitForElementAndCheckText(self._show_chats, 'css', buttonText)
+        result_2 = self.waitForElementAndCheckText(self._date_field_check_filter, 'css', dateText)
+        result = [result_1, result_2]
+        return result
+    def checkTextInTagdButtonText(self, buttonText):
+        result= self.waitForElementAndCheckText(self._show_chats, 'css', buttonText)
+        return result
+    def clearAllFilterAndCheckChatsMessage(self):
+        self.elementClick(self._clear_all)
+        self.waitForElementAndCheckText(self._show_chats, 'css', "Show all chats")
+
+    def assertResult(self, actual, value):
+        if actual == value:
+            return "PASS"
+        return "FAIL"
+
+
+    def checkDaysFilter(self):
+        self.clickAddFilter()
+        self.clickDateFieldAndChoseFilter(self._date_field_today)
+        result_1 = self.checkTextInDateFieldAndButtonText('Today', 'Show 0 chats')
+        self.clickDateFieldAndChoseFilter(self._date_field_yesterday)
+        result_2 = self.checkTextInDateFieldAndButtonText('Yesterday', 'Show 0 chats')
+        self.clickDateFieldAndChoseFilter(self._date_field_last7days)
+        result_3 = self.checkTextInDateFieldAndButtonText('Last 7 days', 'Show 0 chats')
+        self.clickDateFieldAndChoseFilter(self._date_field_last30days)
+        result_4 = self.checkTextInDateFieldAndButtonText('Last 30 days', 'Show 0 chats')
+        self.clickDateFieldAndChoseFilter(self._date_field_last_month)
+        result_5 = self.checkTextInDateFieldAndButtonText('Last month', 'Show 0 chats')
+        self.clickDateFieldAndChoseFilter(self._date_field_current_month)
+        result_6 = self.checkTextInDateFieldAndButtonText('Current month', 'Show 0 chats')
+        self.clearAllFilterAndCheckChatsMessage()
+        self.waitUntilElementIsClickable(self._show_chats)
+        self.elementClick(self._show_chats)
+        numberOfChats = self.getNumbersOfChats()
+        result_7 = self.assertResult(numberOfChats,4)
+        result = [result_1, result_2, result_3, result_4, result_5, result_6, result_7]
+        return result
+
+    def checkIfSpamFilterWorkCorrectly(self):
+        self.clickAddFilter()
+        self.clickTagFieldAndChoseFilter(self._tag_field_spam)
+        result_1 = self.checkTextInTagdButtonText('Show 2 chats')
+        self.waitUntilElementIsClickable(self._show_chats, 'css')
+        self.elementClick(self._show_chats)
+        return result_1
+
 
     def removeAllFilters(self):
         self.elementClick(self._home_icon)
