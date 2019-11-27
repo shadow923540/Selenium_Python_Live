@@ -13,7 +13,7 @@ class TestStatus(SeleniumDriver):
     def setResult(self, result, resultMessage):
         try:
             if result is not None:
-                if result:
+                if any("PASS" in lis for lis in result):
                     self.resultList.append("PASS")
                     self.log.info("### VERIFICATION SUCCESSFUL :: + " + resultMessage)
                 else:
