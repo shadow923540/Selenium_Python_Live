@@ -145,8 +145,8 @@ class SeleniumDriver():
             self.log.info("Element not found locator: " + locator)
             return False
 
-    def waitForElement(self, locator, locatorType="id",
-                       timeout=10, pollFrequency=0.5):
+    def waitUntilElementIsVisible(self, locator, locatorType="id",
+                                  timeout=10, pollFrequency=0.5):
         element = None
         try:
             byType = self.getByType(locatorType)
@@ -157,6 +157,24 @@ class SeleniumDriver():
                                                      ElementNotVisibleException,
                                                      ElementNotSelectableException])
             element = wait.until(EC.visibility_of_element_located((byType,
+                                                             locator)))
+            self.log.info("Element appeared on the web page")
+        except:
+            self.log.info("Element not appeared on the web page")
+        return element
+
+    def waitUntilElementIsClickable(self, locator, locatorType="id",
+                                  timeout=10, pollFrequency=0.5):
+        element = None
+        try:
+            byType = self.getByType(locatorType)
+            print("Waiting for maximum :: " + str(timeout) +
+                  " :: seconds for element to be clickable")
+            wait = WebDriverWait(self.driver, 10, poll_frequency=1,
+                                 ignored_exceptions=[NoSuchElementException,
+                                                     ElementNotVisibleException,
+                                                     ElementNotSelectableException])
+            element = wait.until(EC.element_to_be_clickable((byType,
                                                              locator)))
             self.log.info("Element appeared on the web page")
         except:
@@ -182,10 +200,13 @@ class SeleniumDriver():
 
 
     def waitForElementAndCheckText(self, locator, locatorType, messageToVerify):
-        self.waitForElement(locator, locatorType= locatorType)
+        self.waitUntilElementIsVisible(locator, locatorType= locatorType)
         message = self.getText(locator, locatorType= locatorType)
         result = self.util.verifyTextMatch(message, messageToVerify)
-        assert result == True
+        if result:
+            return "PASS"
+        return "FAIL"
+
 
     def getElementList(self, locator, locatorType="css"):
         element = None

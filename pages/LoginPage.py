@@ -33,7 +33,7 @@ class LoginPage(BasePage):
         self.elementClick(self._login_button, locatorType='xpath')
 
     def login(self, email= email , password = password):
-        self.waitForElement(self._email_field)
+        self.waitUntilElementIsVisible(self._email_field)
         self.enterEmail(email)
         self.enterPassword(password)
         self.clickLoginButton()
