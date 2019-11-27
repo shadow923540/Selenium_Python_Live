@@ -15,10 +15,17 @@ class LoginTests(unittest.TestCase):
         self.ts = TestStatus(self.driver)
         self.Archives = ArchivesPage(self.driver)
 
-    @pytest.mark.run(order=1)
-    def test_checkTodayFiltr(self):
-        self.Archives.checkTodayFilter()
+    # @pytest.mark.run(order=1)
+    # def test_checkTodayFiltr(self):
+    #     result = self.Archives.checkDaysFilter()
+    #     print(result)
+    #     self.ts.markFinal('CheckTodayFilter', result, "Checkfilter Failed")
 
+    @pytest.mark.run(order=1)
+    def test_checkSpamFilter(self):
+        result = self.Archives.checkIfSpamFilterWorkCorrectly()
+        print(result)
+        self.ts.markFinal('CheckSpamFilter', result, "CheckSpamFilter Failed")
 
 
 
