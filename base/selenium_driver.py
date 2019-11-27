@@ -200,7 +200,7 @@ class SeleniumDriver():
 
 
     def waitForElementAndCheckText(self, locator, locatorType, messageToVerify):
-        self.waitUntilElementIsVisible(locator, locatorType= locatorType)
+        self.waitUntilElementIsClickable(locator, locatorType= locatorType)
         message = self.getText(locator, locatorType= locatorType)
         result = self.util.verifyTextMatch(message, messageToVerify)
         if result:
