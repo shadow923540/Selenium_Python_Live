@@ -5,10 +5,18 @@ from pages.NavBar import NavBar
 from pages.Archives import ArchivesPage
 
 
+def getDriver():
+    wdf = WebDriverFactory()
+    driver = wdf.getWebDriverInstance()
+    return driver
+
 @pytest.yield_fixture(scope="class")
 def oneTimeSetUp(request, browser):
-    wdf = WebDriverFactory(browser)
-    driver = wdf.getWebDriverInstance()
+    baseUrl = "https://accounts.labs.livechatinc.com"
+    driver = getDriver()
+    driver.maximize_window()
+    driver.implicitly_wait(3)
+    driver.get(baseUrl)
     Lp = LoginPage(driver)
     Nb = NavBar(driver)
     Lp.login()
@@ -18,12 +26,12 @@ def oneTimeSetUp(request, browser):
     yield driver
     driver.quit()
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def setUp():
-    print("Running test set up")
-    yield
-    ArchivesPage.removeAllFilters()
-    print("running test teardown")
+    driver = getDriver()
+    Archive = ArchivesPage(driver)
+    Archive.removeAllFilters()
+
 
 def pytest_addoption(parser):
     parser.addoption("--browser")
