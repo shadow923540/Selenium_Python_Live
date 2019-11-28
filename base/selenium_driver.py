@@ -162,7 +162,7 @@ class SeleniumDriver():
             return False
 
     def waitUntilElementIsVisible(self, locator, locatorType="id",
-                                  timeout=10, pollFrequency=0.5):
+                                  timeout=15, pollFrequency=0.5):
         element = None
         try:
             byType = self.getByType(locatorType)
@@ -216,7 +216,7 @@ class SeleniumDriver():
 
 
     def waitForElementAndCheckText(self, locator, locatorType, messageToVerify):
-        self.waitUntilElementIsClickable(locator, locatorType=locatorType)
+        self.waitUntilElementIsVisible(locator, locatorType=locatorType)
         message = self.getText(locator, locatorType= locatorType)
         result = self.util.verifyTextMatch(message, messageToVerify)
         if result:
