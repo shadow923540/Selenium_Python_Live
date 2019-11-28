@@ -23,6 +23,6 @@ class Util():
             self.log.info("### VERIFICATION MATCHED !!!")
             return True
         else:
-            self.log.info("### VERIFICATION DOES NOT MATCHED !!!")
+            self.log.error("### VERIFICATION DOES NOT MATCHED !!!")
             return False
 
