@@ -12,12 +12,13 @@ class ArchivesPage(BasePage):
 
     ################### LOCATORS #####################
 
-    _archives_icon= "a[href='/archives']"
+    _archives_icon = "a[href='/archives']"
     _archives_text = "css-pbayr1"
-    _home_icon= "a[href='/home']"
+    _home_icon = "a[href='/home']"
     _archives_welcome_message = ".css-pbayr1"
     _search_in_archives = "input.css-1qq8djj css-673enp4"
     _add_filter = ".css-rnahou0 > span"
+    _chat_authors = "//div[contains(text(), 'and') and contains(@class,'css-1w1vawl')]"
 
     #Filter options
     _date_field = ".css-1jy8uex > li:nth-child(1) > div > button"
@@ -192,6 +193,39 @@ class ArchivesPage(BasePage):
         self.elementClick(self._show_chats)
         self.waitUntilElementIsVisible(self._archives_text)
         result = self.checkIfSelectedTagIsVisibleInConversation(tagname)
+        return result
+
+    def checkIfSelectedAgentIsVisibleInConversation(self, selectedAgent):
+        time.sleep(1)
+        result = []
+        chats = self.getElementList(self._numbers_of_chats)
+        for chat in chats:
+            self.elementClick(element=chat)
+            agentName = self.getText(self._chat_authors, locatorType='xpath')
+            if self.util.verifyTextContains(agentName, selectedAgent):
+                result.append("PASS")
+            else:
+                result.append("FAIL")
+        return result
+
+    def checkTagAgentFilter(self, locatorAgent, locatorAgentName):
+        self.clickAddFilter()
+        self.elementClick(self._agent_field)
+        agentName = self.getText(locatorAgentName, locatorType='css')
+        self.elementClick(locatorAgent)
+        time.sleep(1)
+        self.elementClick(self._show_chats)
+        result = self.checkIfSelectedAgentIsVisibleInConversation(agentName)
+        return result
+
+    @allure.step("Select Agent1 filter tag then check if  in each displayed conversation is Agent1")
+    def checkTagAgent1Filter(self):
+        result = self.checkTagAgentFilter(self._agent_field_1, self._agent_field_1_title)
+        return result
+
+    @allure.step("Select Agent2 filter tag then check if  in each displayed conversation is Agent2")
+    def checkTagAgent2Filter(self):
+        result = self.checkTagAgentFilter(self._agent_field_2, self._agent_field_2_title)
         return result
 
     @allure.step("Select Spam filter tag then check if Spam tag exists in each displayed conversation")
