@@ -30,10 +30,16 @@ class LoginTests(unittest.TestCase):
         result = self.Archives.checkTagSalesFilter()
         self.ts.markFinal('CheckSalesFilter', result, "CheckSalesFilter Failed")
 
-    @allure.description("Test check if rate filter work correctly and display all chats")
+    @allure.description("Test check if agent filter work correctly and display all chats with chosen agent")
     @pytest.mark.run(order=4)
-    def test_checkRatingFiltrDisplay(self):
-        result = self.Archives.checkRatingFilter()
+    def test_checkAgent1FiltrDisplay(self):
+        result = self.Archives.checkTagAgent1Filter()
+        self.ts.markFinal('CheckAllRatingFilter', result, "Checkfilter Failed")
+
+    @allure.description("Test check if agent filter work correctly and display all chats with chosen agent")
+    @pytest.mark.run(order=5)
+    def test_checkAgent2FiltrDisplay(self):
+        result = self.Archives.checkTagAgent1Filter()
         self.ts.markFinal('CheckAllRatingFilter', result, "Checkfilter Failed")
 
 
