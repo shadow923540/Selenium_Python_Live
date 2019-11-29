@@ -9,7 +9,8 @@ For run the tests you will need:
 -allure-python-commons           2.8.6\
 -pytest                          5.0.1\
 -pytest-ordering                 0.6\
--selenium                        3.141.0
+-selenium                        3.141.0\
+-Allure console (if you want generate Allure report)
 
 
 Python3
